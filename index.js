@@ -21,6 +21,8 @@ async function action() {
         tools.exit.neutral('Deploy failed.');
     }
 
+    console.log(tools.context.payload)
+
     const prNumber = tools.context.payload.pull_request.number;
     const heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });
 
