@@ -1,0 +1,5 @@
+name: Lighthouse Report
+description: Runs lighthouse audit
+runs:
+  using: docker
+  image: Dockerfile
