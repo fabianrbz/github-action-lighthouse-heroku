@@ -11,7 +11,16 @@ function buildUrls(web_url, paths) {
 
 async function action() {
   try {
-    const tools = new Toolkit({ secrets: ['GITHUB_TOKEN', 'HEROKU_AUTH_TOKEN'] });
+    const tools = new Toolkit({
+      event: ['deployment_status'],
+      secrets: ['GITHUB_TOKEN', 'HEROKU_AUTH_TOKEN']
+    });
+
+    const deployState = tools.context.payload.deployment_status.state;
+    if (deployState === 'failure') {
+        tools.exit.neutral('Deploy failed.');
+    }
+
     const prNumber = tools.context.payload.pull_request.number;
     const heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });
 
