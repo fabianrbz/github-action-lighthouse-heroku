@@ -22,11 +22,11 @@ async function action() {
 
     // Retrieve app's url
     const deployment = tools.context.payload.deployment;
-    const webUrl = deployment.payload.weburl;
+    const webUrl = deployment.payload.web_url;
 
     // Run Lighthouse
     const response = await lighthouseCheck({
-      urls: buildUrls(web_url, core.getInput('urls')),
+      urls: buildUrls(webUrl, core.getInput('urls')),
       emulatedFormFactor: 'desktop',
       isGitHubAction: true,
       outputDirectory: core.getInput('outputDirectory'),
