@@ -1,6 +1,5 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
-const Heroku = require("heroku-client");
 const { Toolkit } = require('actions-toolkit');
 const { lighthouseCheck } = require("@foo-software/lighthouse-check");
 
@@ -21,21 +20,13 @@ async function action() {
         tools.exit.neutral('Deploy failed.');
     }
 
-    console.log(tools.context.payload)
-
-    const prNumber = tools.context.payload.pull_request.number;
-    const heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });
-
-    // Fetch Review App
-    const reviewApps = await heroku.get(
-      `/pipelines/${process.env.HEROKU_PIPELINE_ID}/review-apps`
-    );
-    const appId = reviewApps.find((app) => app.pr_number == pr_number).id;
-    const app = await heroku.get(`/apps/${appId}`);
+    // Retrieve app's url
+    const deployment = tools.context.payload.deployment;
+    const webUrl = deployment.payload.weburl;
 
     // Run Lighthouse
     const response = await lighthouseCheck({
-      urls: buildUrls(app.web_url, core.getInput('urls')),
+      urls: buildUrls(web_url, core.getInput('urls')),
       emulatedFormFactor: 'desktop',
       isGitHubAction: true,
       outputDirectory: core.getInput('outputDirectory'),
