@@ -5,7 +5,7 @@ const { lighthouseCheck } = require("@foo-software/lighthouse-check");
 
 function buildUrls(web_url, paths) {
   const app_domain = web_url.replace(/\/$/, '')
-  return paths.map(path => `${app_domain}${path}`);
+  return paths.split(',').map(path => `${app_domain}${path}`);
 }
 
 async function action() {
