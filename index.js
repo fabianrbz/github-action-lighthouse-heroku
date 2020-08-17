@@ -20,6 +20,8 @@ async function action() {
         tools.exit.neutral('Deploy failed.');
     }
 
+    console.log(tools.context.payload)
+
     // Retrieve app's url
     const deployment = tools.context.payload.deployment;
     const webUrl = deployment.payload.web_url;
