@@ -26,12 +26,20 @@ async function action() {
     const deployment = tools.context.payload.deployment;
     const webUrl = deployment.payload.web_url;
 
+    // Get the PR's number
+    const prNumber = deployment.environment.replace(`${tools.context.payload.repository.name}-pr-`, '');
+    const prCommentUrl = `${deployment.repository_url}/pulls/${prNumber}/reviews`;
+
     // Run Lighthouse
     const response = await lighthouseCheck({
       urls: buildUrls(webUrl, core.getInput('urls')),
       emulatedFormFactor: 'desktop',
       isGitHubAction: true,
       outputDirectory: core.getInput('outputDirectory'),
+      prCommentEnabled: true,
+      prCommentSaveOld: true,
+      prCommentAccessToken: process.env.HEROKU_AUTH_TOKEN,
+      prCommentUrl: prCommentUrl,
     });
 
     core.setOutput('lighthouseCheckResults', JSON.stringify(response));
