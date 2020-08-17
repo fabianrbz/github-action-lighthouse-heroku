@@ -20,7 +20,7 @@ async function action() {
         tools.exit.neutral('Deploy failed.');
     }
 
-    console.log(tools.context.payload)
+    //console.log(tools.context.payload)
 
     // Retrieve app's url
     const deployment = tools.context.payload.deployment;
@@ -29,6 +29,9 @@ async function action() {
     // Get the PR's number
     const prNumber = deployment.environment.replace(`${tools.context.payload.repository.name}-pr-`, '');
     const prCommentUrl = `${deployment.repository_url}/pulls/${prNumber}/reviews`;
+
+    console.log(prNumber);
+    console.log(prCommentUrl);
 
     // Run Lighthouse
     const response = await lighthouseCheck({
