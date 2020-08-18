@@ -41,7 +41,7 @@ async function action() {
       outputDirectory: core.getInput('outputDirectory'),
       prCommentEnabled: true,
       prCommentSaveOld: true,
-      prCommentAccessToken: process.env.HEROKU_AUTH_TOKEN,
+      prCommentAccessToken: process.env.GITHUB_TOKEN,
       prCommentUrl: prCommentUrl,
     });
 
