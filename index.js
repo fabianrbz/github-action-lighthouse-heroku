@@ -17,35 +17,51 @@ async function action() {
 
     const deployState = tools.context.payload.deployment_status.state;
     if (deployState === 'failure') {
-        tools.exit.neutral('Deploy failed.');
+      tools.exit.neutral('Deploy failed.');
     }
 
-    //console.log(tools.context.payload)
+    console.log(tools.context.payload)
+    const baseSha = tools.context.payload.pull_request.base.sha;
+    const headSha = tools.context.payload.pull_request.head.sha;
+    const owner = tools.context.payload.repository.owner.login;
+    const repo = tools.context.payload.repository.name;
 
-    // Retrieve app's url
-    const deployment = tools.context.payload.deployment;
-    const webUrl = deployment.payload.web_url;
-
-    // Get the PR's number
-    const prNumber = deployment.environment.replace(`${tools.context.payload.repository.name}-pr-`, '');
-    const prCommentUrl = `${deployment.repository_url}/pulls/${prNumber}/reviews`;
-
-    console.log(prNumber);
-    console.log(prCommentUrl);
-
-    // Run Lighthouse
-    const response = await lighthouseCheck({
-      urls: buildUrls(webUrl, core.getInput('urls')),
-      emulatedFormFactor: 'desktop',
-      isGitHubAction: true,
-      outputDirectory: core.getInput('outputDirectory'),
-      prCommentEnabled: true,
-      prCommentSaveOld: true,
-      prCommentAccessToken: process.env.GITHUB_TOKEN,
-      prCommentUrl: prCommentUrl,
+    const changes = await tools.github.repos.compareCommits({
+      owner,
+      repo,
+      base: baseSha,
+      head: headSha
     });
 
-    core.setOutput('lighthouseCheckResults', JSON.stringify(response));
+    if (!changes.data.files.includes('Gemfile.lock')) {
+      tools.exit.success('Gemfile.lock didn\'t change, skipping...');
+    } else {
+
+      // Retrieve app's url
+      const deployment = tools.context.payload.deployment;
+      const webUrl = deployment.payload.web_url;
+
+      // Get the PR's number
+      const prNumber = deployment.environment.replace(`${tools.context.payload.repository.name}-pr-`, '');
+      const prCommentUrl = `${deployment.repository_url}/pulls/${prNumber}/reviews`;
+
+      console.log(prNumber);
+      console.log(prCommentUrl);
+
+      // Run Lighthouse
+      const response = await lighthouseCheck({
+        urls: buildUrls(webUrl, core.getInput('urls')),
+        emulatedFormFactor: 'desktop',
+        isGitHubAction: true,
+        outputDirectory: core.getInput('outputDirectory'),
+        prCommentEnabled: true,
+        prCommentSaveOld: true,
+        prCommentAccessToken: process.env.GITHUB_TOKEN,
+        prCommentUrl: prCommentUrl,
+      });
+
+      core.setOutput('lighthouseCheckResults', JSON.stringify(response));
+    }
   } catch (error) {
     core.setFailed(error.message);
   }
