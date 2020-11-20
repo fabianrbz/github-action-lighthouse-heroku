@@ -33,35 +33,30 @@ async function action() {
       head: headSha
     });
 
-    if (!changes.data.files.includes('Gemfile.lock')) {
-      tools.exit.success('Gemfile.lock didn\'t change, skipping...');
-    } else {
+    // Retrieve app's url
+    const deployment = tools.context.payload.deployment;
+    const webUrl = deployment.payload.web_url;
 
-      // Retrieve app's url
-      const deployment = tools.context.payload.deployment;
-      const webUrl = deployment.payload.web_url;
+    // Get the PR's number
+    const prNumber = deployment.environment.replace(`${tools.context.payload.repository.name}-pr-`, '');
+    const prCommentUrl = `${deployment.repository_url}/pulls/${prNumber}/reviews`;
 
-      // Get the PR's number
-      const prNumber = deployment.environment.replace(`${tools.context.payload.repository.name}-pr-`, '');
-      const prCommentUrl = `${deployment.repository_url}/pulls/${prNumber}/reviews`;
+    console.log(prNumber);
+    console.log(prCommentUrl);
 
-      console.log(prNumber);
-      console.log(prCommentUrl);
+    // Run Lighthouse
+    const response = await lighthouseCheck({
+      urls: buildUrls(webUrl, core.getInput('urls')),
+      emulatedFormFactor: 'desktop',
+      isGitHubAction: true,
+      outputDirectory: core.getInput('outputDirectory'),
+      prCommentEnabled: true,
+      prCommentSaveOld: true,
+      prCommentAccessToken: process.env.GITHUB_TOKEN,
+      prCommentUrl: prCommentUrl,
+    });
 
-      // Run Lighthouse
-      const response = await lighthouseCheck({
-        urls: buildUrls(webUrl, core.getInput('urls')),
-        emulatedFormFactor: 'desktop',
-        isGitHubAction: true,
-        outputDirectory: core.getInput('outputDirectory'),
-        prCommentEnabled: true,
-        prCommentSaveOld: true,
-        prCommentAccessToken: process.env.GITHUB_TOKEN,
-        prCommentUrl: prCommentUrl,
-      });
-
-      core.setOutput('lighthouseCheckResults', JSON.stringify(response));
-    }
+    core.setOutput('lighthouseCheckResults', JSON.stringify(response));
   } catch (error) {
     core.setFailed(error.message);
   }
