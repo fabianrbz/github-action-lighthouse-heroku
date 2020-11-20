@@ -20,7 +20,7 @@
   "dependencies": {
     "@actions/core": "^1.2.4",
     "@actions/github": "^4.0.0",
-    "@foo-software/lighthouse-check": "^1.0.4",
+    "@foo-software/lighthouse-check": "^2.0.1",
     "actions-toolkit": "^5.0.0"
   }
 }
