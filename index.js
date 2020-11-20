@@ -36,6 +36,7 @@ async function action() {
       urls: buildUrls(webUrl, core.getInput('urls')),
       emulatedFormFactor: 'desktop',
       isGitHubAction: true,
+      onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo'],
       outputDirectory: core.getInput('outputDirectory'),
       prCommentEnabled: true,
       prCommentSaveOld: true,
