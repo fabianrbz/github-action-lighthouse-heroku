@@ -20,19 +20,6 @@ async function action() {
       tools.exit.neutral('Deploy failed.');
     }
 
-    console.log(tools.context.payload)
-    const baseSha = tools.context.payload.pull_request.base.sha;
-    const headSha = tools.context.payload.pull_request.head.sha;
-    const owner = tools.context.payload.repository.owner.login;
-    const repo = tools.context.payload.repository.name;
-
-    const changes = await tools.github.repos.compareCommits({
-      owner,
-      repo,
-      base: baseSha,
-      head: headSha
-    });
-
     // Retrieve app's url
     const deployment = tools.context.payload.deployment;
     const webUrl = deployment.payload.web_url;
