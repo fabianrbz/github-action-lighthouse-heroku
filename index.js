@@ -1,10 +1,9 @@
-import audit from './audit.js';
-import comment from './comment.js';
+const audit = require('./audit.js');
+const comment = require('./comment.js');
 
-import * as core from '@actions/core';
-import * as github from '@actions/github';
-import pkg from 'actions-toolkit';
-const { Toolkit } = pkg;
+const core = require('@actions/core');
+const github = require('@actions/github');
+const { Toolkit } = require('actions-toolkit');
 
 function buildUrls(web_url, paths) {
   const app_domain = web_url.replace(/\/$/, '')
@@ -43,6 +42,7 @@ async function action() {
 
     core.setOutput('lighthouseCheckResults', JSON.stringify(prComment));
   } catch (error) {
+    console.log(error)
     core.setFailed(error.message);
   }
 }

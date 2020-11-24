@@ -1,6 +1,6 @@
-import lighthouse from 'lighthouse';
-import chromeLauncher from 'chrome-launcher';
-import config from 'lighthouse/lighthouse-core/config/lr-desktop-config.js';
+const lighthouse = require('lighthouse');
+const chromeLauncher = require('chrome-launcher');
+const config = require('lighthouse/lighthouse-core/config/lr-desktop-config.js');
 
 const buildResult = (url, audit) => {
   let result = {
@@ -16,7 +16,7 @@ const buildResult = (url, audit) => {
   return result;
 };
 
-export default async ({
+module.exports = async ({
   urls
 }) => {
   let results = [];
@@ -43,6 +43,8 @@ export default async ({
 
       results.push(result);
     };
+
+    results.forEach(result => console.log(result));
   } catch (error) {
     console.log(error);
   } finally {
