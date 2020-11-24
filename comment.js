@@ -1,3 +1,5 @@
+import fetch from 'node-fetch';
+
 const COMMENT_ID = '<!-- lighthouse-check -->';
 
 const generateTable = (result) => {
@@ -22,8 +24,8 @@ const generateComment = (results) => {
   return comment;
 }
 
-const findComment = async (accessToken) => {
-  const existingComments = await fetch(prCommentUrl, {
+const findComment = async (accessToken, commentUrl) => {
+  const existingComments = await fetch(commentUrl, {
     method: 'get',
     headers: {
       'content-type': 'application/json',
@@ -72,9 +74,9 @@ export default async ({
   try {
     let newComment = generateComment(results);
 
-    let existingComment = findComment(accessToken);
+    let existingComment = findComment(accessToken, commentUrl);
 
-    let result = submitComment(existingComment, commentUrl, text, accessToken);
+    let result = submitComment(existingComment, commentUrl, newComment, accessToken);
 
     if (result.id) {
       throw new Error(result.message || 'something went wrong');

@@ -1,14 +1,10 @@
-import core from '@actions/core';
-import github from '@actions/github';
-import { Toolkit } from 'actions-toolkit';
-
-//const comment = require('./comment');
 import audit from './audit.js';
 import comment from './comment.js';
 
-import core from '@actions/core';
-import github from '@actions/github';
-import { Toolkit } from 'actions-toolkit';
+import * as core from '@actions/core';
+import * as github from '@actions/github';
+import pkg from 'actions-toolkit';
+const { Toolkit } = pkg;
 
 function buildUrls(web_url, paths) {
   const app_domain = web_url.replace(/\/$/, '')
@@ -51,4 +47,4 @@ async function action() {
   }
 }
 
-await action();
+action();
