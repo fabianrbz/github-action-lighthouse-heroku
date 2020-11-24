@@ -6,21 +6,23 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions-book/github-action-explore-debug.git"
+    "url": "git+https://github.com/fabianrbz/github-action-lighthouse-heroku.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/actions-book/github-action-explore-debug/issues"
+    "url": "https://github.com/fabianrbz/github-action-lighthouse-heroku/issues"
   },
-  "homepage": "https://github.com/actions-book/github-action-explore-debug#readme",
+  "homepage": "https://github.com/fabianrbz/github-action-lighthouse-heroku/#readme",
   "dependencies": {
     "@actions/core": "^1.2.4",
     "@actions/github": "^4.0.0",
-    "@foo-software/lighthouse-check": "^2.0.1",
-    "actions-toolkit": "^5.0.0"
+    "actions-toolkit": "^5.0.0",
+    "lighthouse": "^6.4.1",
+    "chrome-launcher": "^0.13.4"
   }
 }
